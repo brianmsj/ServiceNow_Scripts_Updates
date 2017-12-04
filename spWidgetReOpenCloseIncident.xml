@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2017-06-28 23:43:55">
+<sys_remote_update_set action="INSERT_OR_UPDATE">
+<application display_value="Global">global</application>
+<application_name>Global</application_name>
+<application_scope>global</application_scope>
+<application_version/>
+<collisions/>
+<commit_date/>
+<deleted/>
+<description/>
+<inserted/>
+<name>HM Service Portal Request Reopen Widget</name>
+<origin_sys_id/>
+<release_date/>
+<remote_sys_id>442c7d87dbaf36004e27fba31d961954</remote_sys_id>
+<state>loaded</state>
+<summary/>
+<sys_class_name>sys_remote_update_set</sys_class_name>
+<sys_created_by>tyler.thielman</sys_created_by>
+<sys_created_on>2017-06-28 23:43:55</sys_created_on>
+<sys_id>a1dd0a83dbef36004e27fba31d961937</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>tyler.thielman</sys_updated_by>
+<sys_updated_on>2017-06-28 23:43:55</sys_updated_on>
+<update_set display_value=""/>
+<update_source display_value=""/>
+<updated/>
+</sys_remote_update_set>
+<sys_update_xml action="INSERT_OR_UPDATE">
+<action>INSERT_OR_UPDATE</action>
+<application display_value="Global">global</application>
+<category>customer</category>
+<comments/>
+<name>sp_widget_218d3587dba77200fad3f3261d9619ff</name>
+<payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sp_widget"&gt;&lt;sp_widget action="INSERT_OR_UPDATE"&gt;&lt;client_script&gt;&lt;![CDATA[function() {
+  var c = this;
+  c.uiAction = function(action) {
+    c.data.action = action;
+    c.server.update().then(function() {
+    c.data.action = undefined;
+    });
+  };
+}]]&gt;&lt;/client_script&gt;&lt;controller_as&gt;c&lt;/controller_as&gt;&lt;css/&gt;&lt;data_table&gt;sp_instance&lt;/data_table&gt;&lt;demo_data/&gt;&lt;description/&gt;&lt;docs/&gt;&lt;field_list/&gt;&lt;has_preview&gt;false&lt;/has_preview&gt;&lt;id/&gt;&lt;internal&gt;false&lt;/internal&gt;&lt;link/&gt;&lt;name&gt;Incident Buttons&lt;/name&gt;&lt;option_schema/&gt;&lt;public&gt;false&lt;/public&gt;&lt;roles/&gt;&lt;script&gt;&lt;![CDATA[(function() {
+  var test = $sp.getRecord();
+
+  data.table = input.table || $sp.getParameter("table");
+  data.sys_id = input.sys_id || $sp.getParameter("sys_id");
+  data.state_val = $sp.getField(test, 'state').value;
+
+  gr = new GlideRecord(data.table);
+  if (!gr.isValid())
+    return;
+
+  if (!gr.get(data.sys_id))
+    return;
+
+  if (input &amp;&amp; input.action) {
+    var action = input.action;
+    if (data.table == 'incident') {
+      if (action == 'close') {
+        //Resolve Incident
+        gr.setValue('incident_state', 7);
+        gr.setValue('state', 7); //7 = Closed state
+        //use work_notes or comments depending on visibility
+        gr.work_notes = 'Closed by ' + gs.getUserDisplayName() + ' via Service Portal';
+        gr.setValue('closed_by', gs.getUserID());
+        gr.setValue('close_code', 'Closed/Resolved by Caller');
+        gr.setValue('close_notes', 'Closed by Caller via Service Portal');
+        gr.update();
+      }
+      if (action == 'reopen') {
+        //Reopen Incident
+        gr.setValue('incident_state', 2); //2 = Active state
+        //use work_notes or comments depending on visibility
+        gr.work_notes = 'Reopened by ' + gs.getUserDisplayName() + ' via Service Portal';
+        gr.update();
+      }
+    }
+  }
+})();]]&gt;&lt;/script&gt;&lt;servicenow&gt;false&lt;/servicenow&gt;&lt;sys_class_name&gt;sp_widget&lt;/sys_class_name&gt;&lt;sys_created_by&gt;tyler.thielman&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2017-06-28 22:33:20&lt;/sys_created_on&gt;&lt;sys_customer_update&gt;true&lt;/sys_customer_update&gt;&lt;sys_id&gt;218d3587dba77200fad3f3261d9619ff&lt;/sys_id&gt;&lt;sys_mod_count&gt;13&lt;/sys_mod_count&gt;&lt;sys_name&gt;Incident Buttons&lt;/sys_name&gt;&lt;sys_package display_value="Global" source="global"&gt;global&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_replace_on_upgrade&gt;false&lt;/sys_replace_on_upgrade&gt;&lt;sys_scope display_value="Global"&gt;global&lt;/sys_scope&gt;&lt;sys_update_name&gt;sp_widget_218d3587dba77200fad3f3261d9619ff&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;tyler.thielman&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2017-06-28 23:16:44&lt;/sys_updated_on&gt;&lt;template&gt;&lt;![CDATA[&lt;div class="panel panel-default"&gt;
+ &lt;div class="panel-heading"&gt;Actions&lt;/div&gt;
+ &lt;div class="panel-body"&gt;
+   &lt;div class="btn-group btn-block"&gt;
+     &lt;a class="btn btn-primary btn-block dropdown-toggle" data-toggle="dropdown"
+        href="javascript:void(0)"&gt;Actions
+       &lt;span class="fa fa-caret-down" title="Toggle dropdown menu"&gt;&lt;/span&gt;
+     &lt;/a&gt;
+     &lt;ul class="dropdown-menu"&gt;
+  &lt;!--   &lt;li ng-if="data.state_val != '7'"&gt;
+      &lt;a href="javascript:void(0)" ng-click="c.uiAction('close')"&gt;
+       &lt;i class="fa fa-check-square-o fa-fw"&gt;&lt;/i&gt; Close&lt;/a&gt;&lt;/li&gt; --&gt;
+       &lt;li ng-if="data.state_val == '6'"&gt;
+         &lt;a href="javascript:void(0)" ng-click="c.uiAction('reopen')"&gt;
+           &lt;i class="fa fa-exclamation-circle fa-fw"&gt;&lt;/i&gt; Reopen&lt;/a&gt;&lt;/li&gt;
+           &lt;li class="divider"&gt;&lt;/li&gt;
+       &lt;li class ng-if="data.state_val != '6'"&gt;&lt;a href="javascript:void(0)"&gt;
+         &lt;i class="fa fa-ban"&gt;&lt;/i&gt; No Actions Available&lt;/a&gt;&lt;/li&gt;
+           &lt;/ul&gt;
+   &lt;/div&gt;
+&lt;/div&gt;]]&gt;&lt;/template&gt;&lt;/sp_widget&gt;&lt;/record_update&gt;</payload>
+<remote_update_set display_value="HM Service Portal Request Reopen Widget">a1dd0a83dbef36004e27fba31d961937</remote_update_set>
+<replace_on_upgrade>false</replace_on_upgrade>
+<sys_created_by>tyler.thielman</sys_created_by>
+<sys_created_on>2017-06-28 23:43:55</sys_created_on>
+<sys_id>21dd0a83dbef36004e27fba31d961939</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>tyler.thielman</sys_updated_by>
+<sys_updated_on>2017-06-28 23:43:55</sys_updated_on>
+<table/>
+<target_name>Incident Buttons</target_name>
+<type>Widget</type>
+<update_domain>global</update_domain>
+<update_set display_value=""/>
+<view/>
+</sys_update_xml>
+<sys_update_xml action="INSERT_OR_UPDATE">
+<action>INSERT_OR_UPDATE</action>
+<application display_value="Global">global</application>
+<category>customer</category>
+<comments/>
+<name>sp_instance_3cd3864bdba77200fad3f3261d96191c</name>
+<payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_instance"><sp_instance action="INSERT_OR_UPDATE"><active>true</active><class_name/><color>default</color><css/><glyph/><id/><order>1</order><short_description/><size>md</size><sp_column display_value="2">a77f3d50d7000200a9ad1e173e24d488</sp_column><sp_widget display_value="Incident Buttons">218d3587dba77200fad3f3261d9619ff</sp_widget><sys_class_name>sp_instance</sys_class_name><sys_created_by>tyler.thielman</sys_created_by><sys_created_on>2017-06-28 23:00:11</sys_created_on><sys_customer_update>true</sys_customer_update><sys_id>3cd3864bdba77200fad3f3261d96191c</sys_id><sys_mod_count>0</sys_mod_count><sys_name/><sys_package display_value="Global" source="global">global</sys_package><sys_policy/><sys_replace_on_upgrade>false</sys_replace_on_upgrade><sys_scope display_value="Global">global</sys_scope><sys_update_name>sp_instance_3cd3864bdba77200fad3f3261d96191c</sys_update_name><sys_updated_by>tyler.thielman</sys_updated_by><sys_updated_on>2017-06-28 23:00:11</sys_updated_on><title/><url/><widget_parameters/></sp_instance></record_update>]]></payload>
+<remote_update_set display_value="HM Service Portal Request Reopen Widget">a1dd0a83dbef36004e27fba31d961937</remote_update_set>
+<replace_on_upgrade>false</replace_on_upgrade>
+<sys_created_by>tyler.thielman</sys_created_by>
+<sys_created_on>2017-06-28 23:43:55</sys_created_on>
+<sys_id>25dd0a83dbef36004e27fba31d961938</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>tyler.thielman</sys_updated_by>
+<sys_updated_on>2017-06-28 23:43:55</sys_updated_on>
+<table/>
+<target_name/>
+<type>Instance</type>
+<update_domain>global</update_domain>
+<update_set display_value=""/>
+<view/>
+</sys_update_xml>
+<sys_update_xml action="INSERT_OR_UPDATE">
+<action>INSERT_OR_UPDATE</action>
+<application display_value="Global">global</application>
+<category>customer</category>
+<comments/>
+<name>sp_instance_29af3d50d7000200a9ad1e173e24d4d7</name>
+<payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_instance"><sp_instance action="INSERT_OR_UPDATE"><active>true</active><class_name/><color>primary</color><css/><glyph/><id/><order>3</order><short_description/><size>md</size><sp_column display_value="2">a77f3d50d7000200a9ad1e173e24d488</sp_column><sp_widget display_value="Ticket Location">2795e5e2ff123100ba13ffffffffff84</sp_widget><sys_class_name>sp_instance</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2015-05-11 21:25:25</sys_created_on><sys_customer_update>true</sys_customer_update><sys_id>29af3d50d7000200a9ad1e173e24d4d7</sys_id><sys_mod_count>7</sys_mod_count><sys_name>Location</sys_name><sys_package display_value="Service Portal - Core" source="com.glide.service-portal">8a279baddb6e3600fad3f3261d961962</sys_package><sys_policy/><sys_replace_on_upgrade>false</sys_replace_on_upgrade><sys_scope display_value="Global">global</sys_scope><sys_update_name>sp_instance_29af3d50d7000200a9ad1e173e24d4d7</sys_update_name><sys_updated_by>tyler.thielman</sys_updated_by><sys_updated_on>2017-06-28 23:00:11</sys_updated_on><title>Location</title><url/><widget_parameters/></sp_instance></record_update>]]></payload>
+<remote_update_set display_value="HM Service Portal Request Reopen Widget">a1dd0a83dbef36004e27fba31d961937</remote_update_set>
+<replace_on_upgrade>false</replace_on_upgrade>
+<sys_created_by>tyler.thielman</sys_created_by>
+<sys_created_on>2017-06-28 23:43:55</sys_created_on>
+<sys_id>6ddd0a83dbef36004e27fba31d961937</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>tyler.thielman</sys_updated_by>
+<sys_updated_on>2017-06-28 23:43:55</sys_updated_on>
+<table/>
+<target_name>Location</target_name>
+<type>Instance</type>
+<update_domain>global</update_domain>
+<update_set display_value=""/>
+<view/>
+</sys_update_xml>
+<sys_update_xml action="INSERT_OR_UPDATE">
+<action>INSERT_OR_UPDATE</action>
+<application display_value="Global">global</application>
+<category>customer</category>
+<comments/>
+<name>sp_instance_dec7081e5b4312000d7ec7ad31f91acf</name>
+<payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_instance"><sp_instance action="INSERT_OR_UPDATE"><active>true</active><class_name/><color>default</color><css/><glyph/><id/><order>0</order><short_description/><size>md</size><sp_column display_value="2">74b7481e5b4312000d7ec7ad31f91a6b</sp_column><sp_widget display_value="Typeahead Search">fa20ec02cb31020000f8d856634c9ce9</sp_widget><sys_class_name>sp_instance</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2016-04-29 17:09:06</sys_created_on><sys_customer_update>true</sys_customer_update><sys_id>dec7081e5b4312000d7ec7ad31f91acf</sys_id><sys_mod_count>1</sys_mod_count><sys_name/><sys_package display_value="Service Portal - Core" source="com.glide.service-portal">8a279baddb6e3600fad3f3261d961962</sys_package><sys_policy/><sys_replace_on_upgrade>false</sys_replace_on_upgrade><sys_scope display_value="Global">global</sys_scope><sys_update_name>sp_instance_dec7081e5b4312000d7ec7ad31f91acf</sys_update_name><sys_updated_by>tyler.thielman</sys_updated_by><sys_updated_on>2017-06-28 23:00:10</sys_updated_on><title/><url/><widget_parameters/></sp_instance></record_update>]]></payload>
+<remote_update_set display_value="HM Service Portal Request Reopen Widget">a1dd0a83dbef36004e27fba31d961937</remote_update_set>
+<replace_on_upgrade>false</replace_on_upgrade>
+<sys_created_by>tyler.thielman</sys_created_by>
+<sys_created_on>2017-06-28 23:43:55</sys_created_on>
+<sys_id>6ddd0a83dbef36004e27fba31d961938</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>tyler.thielman</sys_updated_by>
+<sys_updated_on>2017-06-28 23:43:55</sys_updated_on>
+<table/>
+<target_name/>
+<type>Instance</type>
+<update_domain>global</update_domain>
+<update_set display_value=""/>
+<view/>
+</sys_update_xml>
+<sys_update_xml action="INSERT_OR_UPDATE">
+<action>INSERT_OR_UPDATE</action>
+<application display_value="Global">global</application>
+<category>customer</category>
+<comments/>
+<name>sp_instance_47af3d50d7000200a9ad1e173e24d4f6</name>
+<payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_instance"><sp_instance action="INSERT_OR_UPDATE"><active>true</active><class_name/><color>primary</color><css/><glyph/><id/><order>4</order><short_description/><size>md</size><sp_column display_value="2">a77f3d50d7000200a9ad1e173e24d488</sp_column><sp_widget display_value="Ticket Attachments">9ee37281d7033100a9ad1e173e24d457</sp_widget><sys_class_name>sp_instance</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2015-05-11 21:25:32</sys_created_on><sys_customer_update>true</sys_customer_update><sys_id>47af3d50d7000200a9ad1e173e24d4f6</sys_id><sys_mod_count>7</sys_mod_count><sys_name>Attachments</sys_name><sys_package display_value="Service Portal - Core" source="com.glide.service-portal">8a279baddb6e3600fad3f3261d961962</sys_package><sys_policy/><sys_replace_on_upgrade>false</sys_replace_on_upgrade><sys_scope display_value="Global">global</sys_scope><sys_update_name>sp_instance_47af3d50d7000200a9ad1e173e24d4f6</sys_update_name><sys_updated_by>tyler.thielman</sys_updated_by><sys_updated_on>2017-06-28 23:00:11</sys_updated_on><title>Attachments</title><url/><widget_parameters/></sp_instance></record_update>]]></payload>
+<remote_update_set display_value="HM Service Portal Request Reopen Widget">a1dd0a83dbef36004e27fba31d961937</remote_update_set>
+<replace_on_upgrade>false</replace_on_upgrade>
+<sys_created_by>tyler.thielman</sys_created_by>
+<sys_created_on>2017-06-28 23:43:55</sys_created_on>
+<sys_id>a9dd0a83dbef36004e27fba31d961938</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>tyler.thielman</sys_updated_by>
+<sys_updated_on>2017-06-28 23:43:55</sys_updated_on>
+<table/>
+<target_name>Attachments</target_name>
+<type>Instance</type>
+<update_domain>global</update_domain>
+<update_set display_value=""/>
+<view/>
+</sys_update_xml>
+<sys_update_xml action="INSERT_OR_UPDATE">
+<action>INSERT_OR_UPDATE</action>
+<application display_value="Global">global</application>
+<category>customer</category>
+<comments/>
+<name>sp_instance_44af3d50d7000200a9ad1e173e24d4ea</name>
+<payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sp_instance"&gt;&lt;sp_instance action="INSERT_OR_UPDATE"&gt;&lt;active&gt;true&lt;/active&gt;&lt;class_name/&gt;&lt;color&gt;default&lt;/color&gt;&lt;css/&gt;&lt;glyph/&gt;&lt;id/&gt;&lt;order&gt;2&lt;/order&gt;&lt;short_description/&gt;&lt;size&gt;md&lt;/size&gt;&lt;sp_column display_value="2"&gt;a77f3d50d7000200a9ad1e173e24d488&lt;/sp_column&gt;&lt;sp_widget display_value="Ticket Fields"&gt;5736bf52cb30020000f8d856634c9c2d&lt;/sp_widget&gt;&lt;sys_class_name&gt;sp_instance&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2015-05-11 21:25:18&lt;/sys_created_on&gt;&lt;sys_customer_update&gt;true&lt;/sys_customer_update&gt;&lt;sys_id&gt;44af3d50d7000200a9ad1e173e24d4ea&lt;/sys_id&gt;&lt;sys_mod_count&gt;12&lt;/sys_mod_count&gt;&lt;sys_name&gt;Ticket Fields&lt;/sys_name&gt;&lt;sys_package display_value="Service Portal - Core" source="com.glide.service-portal"&gt;8a279baddb6e3600fad3f3261d961962&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_replace_on_upgrade&gt;false&lt;/sys_replace_on_upgrade&gt;&lt;sys_scope display_value="Global"&gt;global&lt;/sys_scope&gt;&lt;sys_update_name&gt;sp_instance_44af3d50d7000200a9ad1e173e24d4ea&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;tyler.thielman&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2017-06-28 23:00:11&lt;/sys_updated_on&gt;&lt;title&gt;Ticket Fields&lt;/title&gt;&lt;url/&gt;&lt;widget_parameters&gt;&lt;![CDATA[{
+	"pickup_msg": {
+		"value": "Tickets are picked up within &lt;br/&gt; 4 hours (M-F 9-5)",
+		"displayValue": "Tickets are picked up within &lt;br/&gt; 4 hours (M-F 9-5)"
+	}
+}]]&gt;&lt;/widget_parameters&gt;&lt;/sp_instance&gt;&lt;/record_update&gt;</payload>
+<remote_update_set display_value="HM Service Portal Request Reopen Widget">a1dd0a83dbef36004e27fba31d961937</remote_update_set>
+<replace_on_upgrade>false</replace_on_upgrade>
+<sys_created_by>tyler.thielman</sys_created_by>
+<sys_created_on>2017-06-28 23:43:55</sys_created_on>
+<sys_id>e5dd0a83dbef36004e27fba31d961938</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>tyler.thielman</sys_updated_by>
+<sys_updated_on>2017-06-28 23:43:55</sys_updated_on>
+<table/>
+<target_name>Ticket Fields</target_name>
+<type>Instance</type>
+<update_domain>global</update_domain>
+<update_set display_value=""/>
+<view/>
+</sys_update_xml>
+</unload>
