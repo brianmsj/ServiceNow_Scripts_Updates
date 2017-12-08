@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2016-08-01 20:01:14">
+<sp_widget action="INSERT_OR_UPDATE">
+<client_script/>
+<controller_as>c</controller_as>
+<css/>
+<data_table>sp_instance</data_table>
+<demo_data/>
+<description/>
+<docs display_value=""/>
+<field_list/>
+<has_preview>false</has_preview>
+<id>widget-kb-attachments</id>
+<internal>false</internal>
+<link/>
+<name>KB Attachments</name>
+<option_schema/>
+<public>false</public>
+<roles>snc_external,snc_internal</roles>
+<script><![CDATA[data.theArticle = false;
+var theSysID = $sp.getParameter('sys_id');
+
+
+
+	var gr = new GlideRecord("kb_knowledge");
+	gr.addQuery('sys_id', theSysID);
+	gr.addQuery('display_attachments', true);
+	gr.query();
+	while (gr.next()) {
+		var display_attachments = gr.display_attachments;
+	}
+	data.theArticle = display_attachments;
+
+
+var attachments = [];
+var attachdata = new GlideRecord("sys_attachment");
+attachdata.addQuery('table_name', 'kb_knowledge');
+attachdata.addQuery('table_sys_id', theSysID);
+attachdata.query();
+while (attachdata.next()) {
+	var attach = {};
+	attach.file_name = attachdata.file_name.getDisplayValue();
+	attach.sys_id = attachdata.getValue('sys_id');
+	attachments.push(attach);
+}
+data.attachments = attachments;]]></script>
+<servicenow>false</servicenow>
+<sys_class_name>sp_widget</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2016-08-01 19:08:06</sys_created_on>
+<sys_customer_update>true</sys_customer_update>
+<sys_id>0e78ece84fcd2a002473f8e18110c713</sys_id>
+<sys_mod_count>27</sys_mod_count>
+<sys_name>KB Attachments</sys_name>
+<sys_package display_value="Global">global</sys_package>
+<sys_policy/>
+<sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+<sys_scope display_value="Global">global</sys_scope>
+<sys_update_name>sp_widget_0e78ece84fcd2a002473f8e18110c713</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2016-08-01 20:01:08</sys_updated_on>
+<template><![CDATA[<div class="panel panel-{{options.color}} b kbattach" ng-show="data.theArticle">
+  <div class="panel-heading"> <h4 class="panel-title" ng-bind="::options.title">
+    <fa ng-if="::options.glyph.length" name="::{{options.glyph}}" class="m-r-sm" /></h4>
+  </div>
+  <div class="panel-body">
+    <div ng-repeat="list in data.attachments" style="margin-bottom: 1em;">
+      <a ng-href="/sys_attachment.do?sys_id={{list.sys_id}}">{{list.file_name}}</a>
+    </div>
+    <div ng-show="(data.attachments).length < 1" style="margin-bottom: 1em;">
+      There are currently zero attachments
+    </div>
+  </div>
+</div>]]></template>
+</sp_widget>
+</unload>
