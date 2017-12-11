@@ -15,3 +15,4 @@ Field name as the scratchpad variable name
 Setting variable name "tdate"
 
   g_scratchpad.tdate = tomorrow.getDisplayValue();
+  //scratchpad.tdate = tomorrow.getDisplayValue();
