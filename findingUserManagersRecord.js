@@ -32,3 +32,5 @@ while (grUsers.next()){
 	}
 }
 })(source, map, log, target);
+
+gs.users
